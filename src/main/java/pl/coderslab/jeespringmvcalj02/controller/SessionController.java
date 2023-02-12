@@ -1,5 +1,6 @@
 package pl.coderslab.jeespringmvcalj02.controller;
 
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
@@ -8,6 +9,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,5 +82,17 @@ public class SessionController {
         return grades.stream()
                 .mapToInt(Integer::intValue)
                 .average().orElse(0.0);
+    }
+
+    @GetMapping("/loginStart")
+    @ResponseBody
+    public String loginStart(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        LocalDateTime loginStart = (LocalDateTime)session.getAttribute("loginStart");
+        if (loginStart == null) {
+            loginStart = LocalDateTime.now();
+            session.setAttribute("loginStart", loginStart);
+        }
+        return loginStart.toString();
     }
 }
