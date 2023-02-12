@@ -1,10 +1,7 @@
 package pl.coderslab.jeespringmvcalj02.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.Cookie;
@@ -70,5 +67,17 @@ public class CookieController {
         response.addCookie(c);
 
         return "ciasteczko usunięte, zobacz w dev tools!";
+    }
+
+    @PostMapping("/addToCookies")
+    @ResponseBody
+    public String addToCookies(@RequestParam String key, @RequestParam String value, HttpServletResponse response) {
+        Cookie c = new Cookie(key, value);
+        c.setMaxAge(24 * 60 * 60);
+        c.setPath("/");
+
+        response.addCookie(c);
+
+        return "ciasteczko dodane";
     }
 }
