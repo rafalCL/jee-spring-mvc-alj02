@@ -8,6 +8,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 // W projekcie stwórz trzy akcje:
 //
@@ -53,5 +55,30 @@ public class SessionController {
         session.removeAttribute("counter");
 
         return "counter usunięty z sesji";
+    }
+
+    @PostMapping("/addToSession")
+    @ResponseBody
+    public String addToSession(@RequestParam int grade, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        List<Integer> grades = (List<Integer>)session.getAttribute("grades");
+
+        if (grades == null) {
+            grades = new ArrayList<>();
+        }
+
+        grades.add(grade);
+        session.setAttribute("grades", grades);
+
+        double avg = calculateAvg(grades);
+
+        return String.format("grades=%s, avg=%s", grades, avg);
+    }
+
+    private static double calculateAvg(List<Integer> grades) {
+        return grades.stream()
+                .mapToInt(Integer::intValue)
+                .average().orElse(0.0);
     }
 }
